@@ -127,16 +127,99 @@ void mergeSort(int* arr, int left, int right) {
 
 `시간 복잡도: O(NlogN)`
 
-**힙 구조를 통한 구현(내림차순: 최대 힙, 오름차순: 최소 힙)**
+**힙(완전 이진트리 형태의 자료구조) 구조를 통한 구현(내림차순: 최대 힙, 오름차순: 최소 힙)**
 
 <br>
 
 ![힙 정렬](https://user-images.githubusercontent.com/55429912/119266564-435ed680-bc26-11eb-940c-c00f5a515e8e.png)
 
 ```C++
+void heapify(int* arr, int len, int i) {
+    int parent = i;
+    int leftChild = i * 2 + 1;  
+    int rightChild = i * 2 + 2;
+    
+    // 왼쪽 자식 노드와 부모 노드를 비교하여 큰 값을 부모 노드로 올린다.
+    if (l < n && arr[p] < arr[l]) p = l;
 
+    // 오른쪽 자식 노드와 부모 노드를 비교하여 큰 값을 부모 노드로 올린다.
+    if (r < n && arr[p] < arr[r]) p = r;
+
+    // 부모 노드를 가리키는 p 값이 바뀌면 위치를 교환하고
+    // heapify()를 호출하여 과정을 반복한다.
+    if (i != p) {
+        swap(arr, p, i);
+        heapify(arr, len, parent);
+    }
+}
+
+void heapSort(int* arr) {
+    int len = arr.length();
+
+    // heap 초기화
+    for(int i = (len / 2) - 1; i >= 0; i--){
+        heapify(arr, len, i);
+    }
+    for(int i = len - 1; i > 0; i--) {
+        swap(arr, 0, i);  
+        heapify(arr, i, 0);
+    }
+}
 ```
 
 장점: 추가적인 메모리 필요X, 빠른 시간 복잡도 
 
 단점: 불안정 정렬
+
+<br>
+<hr>
+
+## Quick Sort(퀵 정렬)
+
+<br>
+
+`시간 복잡도: 평균: O(NlogN), 최악: O(n^2)`
+
+**분할 정복을 통한 구현(합병 정렬과 달리 퀵 정렬은 비균등하게 분할)**
+
+1. pivot을 선정
+  
+2. pivot을 기준으로 pivot보다 작은 요소들은 모두 pivot의 왼쪽, 큰 요소들은 오른쪽으로 이동
+
+3. pivot을 제외한 왼쪽 리스트와 오른쪽 리스트를 다시 정렬
+
+4. 부분 리스트들이 더이상 분할이 불가능할 때까지 반복
+
+<br>
+
+![퀵 정렬](https://user-images.githubusercontent.com/55429912/119268416-d18a8b00-bc2d-11eb-8c34-bceab99f6b6c.png)
+
+```C++
+void swap(int *a, int *b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+void quickSort(int left, int right) {
+    if(left >= j) return;
+    int pivot = left, start = left + 1, end = right;
+
+    while(start <= end) {
+        while(arr[pivot] >= arr[start] && start <= right) start++;
+        while(arr[pivot] <= arr[end] && end > left) end--;
+        if(s > e) {
+            swap(arr[pivot], arr[end]);
+        }
+        else {
+            swap(arr[start], arr[end]);
+        }
+    }
+
+    quickSort(left, end - 1);
+    quickSort(end + 1, right);
+}
+```
+
+장점: 추가적인 메모리 필요X, 빠른 시간 복잡도(다른 O(NlogN)의 시간 복잡도를 가지는 정렬 알고리즘에 보다 빠름)
+
+단점: 최악의 경우(이미 정렬 되어있는 경우, 리스트가 계속 불균형하게 나누어지는 경우) 시간 복잡도는 O(N^2), 불안정 정렬
