@@ -273,9 +273,68 @@ void insertionSort() {
 
 <br>
 
+`시간 복잡도: O(N^2)`
+
+<br>
+
+![버블 정렬](https://user-images.githubusercontent.com/55429912/119269868-d0a92780-bc34-11eb-9418-705c0fdf02bf.png)
+
+```C++
+#define MAX_SIZE 5
+int arr[MAX_SIZE] = {7, 4, 5, 1, 3};
+
+void bubbleSort() {
+    for (int i = 0; i < MAX_SIZE - 1; i++) {
+        for (int j = 0; j < MAX_SIZE - 1 - i; j++) {
+            if (arr[j] > arr[j + 1]) {
+                int temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+            }
+        }
+    }
+}
+```
+
+장점: 구현 용이, 코드가 직관적
+
+단점: O(N^2)의 시간복잡도
+
 <br>
 <hr>
 
 ## Selection Sort(선택 정렬)
 
 <br>
+
+`시간 복잡도: O(N^2)`
+
+<br>
+
+![선택 정렬](https://user-images.githubusercontent.com/55429912/119270338-2aaaec80-bc37-11eb-9c10-9b35b28737f9.png)
+
+
+```C++
+#define MAX_SIZE 5
+int arr[MAX_SIZE] = {9, 6, 7, 3, 5};
+
+void selectionSort() {
+    for (int i = 0; i < MAX_SIZE - 1; i++) {
+		    int min = i;
+		    for (int j = i + 1; j < MAX_SIZE; j++) {
+			      if (arr[j] < arr[min]) {
+				        min = j;
+			      }
+		    }
+		    if (min != i) {
+			    int temp = arr[i];
+			    arr[i] = arr[min];
+			    arr[min] = temp;
+		    }
+	  }
+}
+```
+
+장점: 정렬을 위한 비교 횟수는 많으나 교환 횟수가 적어 역순 정렬에 효과적
+
+단점: 정렬을 위한 비교횟수가 많아서 이미 정렬된 상태에서 소수의 자료가 추가되면 재정렬시 최악의 처리속도
