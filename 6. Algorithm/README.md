@@ -178,7 +178,7 @@ void heapSort(int* arr) {
 
 <br>
 
-`시간 복잡도: 평균: O(NlogN), 최악: O(n^2)`
+`시간 복잡도: 평균: O(NlogN), 최악: O(N^2)`
 
 **분할 정복을 통한 구현(합병 정렬과 달리 퀵 정렬은 비균등하게 분할)**
 
@@ -200,8 +200,9 @@ void swap(int *a, int *b) {
     *a = *b;
     *b = temp;
 }
+
 void quickSort(int left, int right) {
-    if(left >= j) return;
+    if(left >= right) return;
     int pivot = left, start = left + 1, end = right;
 
     while(start <= end) {
@@ -223,3 +224,58 @@ void quickSort(int left, int right) {
 장점: 추가적인 메모리 필요X, 빠른 시간 복잡도(다른 O(NlogN)의 시간 복잡도를 가지는 정렬 알고리즘에 보다 빠름)
 
 단점: 최악의 경우(이미 정렬 되어있는 경우, 리스트가 계속 불균형하게 나누어지는 경우) 시간 복잡도는 O(N^2), 불안정 정렬
+
+<br>
+<hr>
+
+## Insertion Sort(삽입 정렬)
+
+<br>
+
+`시간 복잡도: 최선: O(N), 평균: O(N^2), 최악: O(N^2)`
+
+<br>
+
+![삽입 정렬](https://user-images.githubusercontent.com/55429912/119269333-229c7e00-bc32-11eb-927b-242e29978717.png)
+
+```C++
+#define MAX_SIZE 5
+int arr[MAX_SIZE] = {8, 5, 6, 2, 4};
+
+void insertionSort() {
+    for(int i = 1; i < MAX_SIZE; i++) {
+        int key = arr[i], j;
+
+        for(j = i - 1; j >= 0; j--) {
+            if(key >= arr[j]) break;
+            arr[j + 1] = arr[j]; 
+        }
+        arr[j + 1] = key;
+    }
+}
+```
+
+장점: 최선의 경우(이미 정렬되어 있는 경우) O(N), 안정 정렬
+
+단점: 최악의 경우 O(N^2)
+
+<br>
+<hr>
+
+## Shell Sort(셸 정렬)
+
+<br>
+
+<br>
+<hr>
+
+## Bubble Sort(버블 정렬)
+
+<br>
+
+<br>
+<hr>
+
+## Selection Sort(선택 정렬)
+
+<br>
