@@ -338,3 +338,170 @@ void selectionSort() {
 장점: 정렬을 위한 비교 횟수는 많으나 교환 횟수가 적어 역순 정렬에 효과적
 
 단점: 정렬을 위한 비교횟수가 많아서 이미 정렬된 상태에서 소수의 자료가 추가되면 재정렬시 최악의 처리속도
+
+
+<br>
+<hr>
+
+## Binary Search(이진 탐색)
+
+<br>
+
+`시간 복잡도: O(logN)`
+
+**반복 또는 재귀로 구현**
+
+<br>
+
+![이진 탐색](https://user-images.githubusercontent.com/55429912/119336229-5de98c00-bcc8-11eb-9621-8caa78cf2ca9.png)
+
+```C++
+#define MAX_SIZE 7
+int val = 6;
+int arr[MAX_SIZE] = {9, 7, 6, 4, 3, 2, 1};
+
+int BinarySearch() {
+    int s = 0, e = MAX_SIZE - 1;
+
+    while(s <= e) {
+        int mid = (s + e) / 2;
+
+        if(arr[mid] == val) {
+            return mid;
+        }
+        else if(arr[mid] < val) {
+            e = mid - 1;
+        }
+        else{
+            s = mid + 1;
+        }
+    }
+    return -1;
+}
+```
+
+장점: 빠른 시간복잡도 O(logN)
+
+단점: 배열이 이미 정렬되어 있어야함
+
+<br>
+<hr>
+
+## DFS(깊이 우선 탐색)
+
+<br>
+
+`시간 복잡도: 인접 행렬: O(V^2), 인접 리스트: O(V + E)`
+
+`V는 노드, E는 간선`
+
+**스택 or 재귀를 통해 구현**
+
+![DFS](https://user-images.githubusercontent.com/55429912/119339590-4ca27e80-bccc-11eb-91ac-75c3452161c3.png)
+
+```C++
+void dfs(int curr) {
+    visit[curr] = true;
+
+    for(int i = 0; i < graph[curr].size(); i++) {
+        int next = graph[curr][i];
+        if(!visit[next]){
+            dfs(next);
+        }
+    }
+}
+```
+
+장점: 현 경로상의 노드들만 기억하면 되므로 저장 공간의 수요가 비교적 적음
+
+단점: 얻어지는 해가 최단 경로가 된다는 보장이 없다.
+
+<br>
+<hr>
+
+## BFS(너비 우선 탐색)
+
+<br>
+
+`시간 복잡도: 인접 행렬: O(V^2), 인접 리스트: O(V + E)`
+
+`V는 노드, E는 간선`
+
+**큐를 통해 구현**
+
+![BFS](https://user-images.githubusercontent.com/55429912/119339896-ba4eaa80-bccc-11eb-8deb-2f524851051f.png)
+
+```C++
+void bfs(int node) {
+    queue<int> q;
+    q.push(node);
+    visit[node] = true;
+
+    while(!q.empty()) {
+        int curr = q.front();
+        q.pop();
+
+        for(int i = 0; i < graph[curr].size(); i++){
+            int next = graph[curr][i];
+            if(!visit[next]) {
+                visit[next] = true;
+                q.push(next);
+            }
+        }
+    }
+}
+```
+
+장점: 답이 여러개인 경우에도 최단 경로임을 보장
+
+단점: 큐를 이용하여 다음 탐색 노드를 저장하기 때문에 노드의 수가 많을수록 불필요한 노드까지 저장
+
+<br>
+<hr>
+
+## Dijkstra(다익스트라)
+
+<br>
+
+**최단 경로 알고리즘**
+
+`시간 복잡도: O((V + E)logV)`
+
+`V는 노드, E는 간선`
+
+`각 노드마다 미방문 노드 중 출발점으로부터 현재까지 계산된 최단거리를 가지는 노드를 찾는데 O(VlogV), 각 노드마다 이웃한 노드의 최단 거리를 갱신할 때 O(ElogV)`
+
+**우선순위큐를 이용하여 구현**
+
+![Dijkstra](https://user-images.githubusercontent.com/55429912/119345274-a0649600-bcd3-11eb-9f1b-d689d592c8ba.png)
+
+```C++
+void dijkstra(int start) {
+    for(int i = 1; i <= N; i++) {
+        d[i] = INF;
+    }
+    d[start] = 0;
+    priority_queue<pair<int, int>, vector<pair<int,int>>, greater<>> pq;
+    pq.push({d[start], start});
+
+    while(!pq.empty()) {
+        int cost = pq.top().first;
+        int curr = pq.top().second;
+        pq.pop();
+
+        if(cost > d[curr]) { continue; }
+
+        for(int i = 0; i < graph[curr].size(); i++) {
+            int next = graph[curr][i].first;
+            if (d[next] > d[curr] + graph[curr][i].second) {
+                d[next] = d[curr] + graph[curr][i].second;
+                pq.push({d[next], next});
+            }
+        }
+    }
+}
+```
+
+장점: 인터넷 라우팅에서 사용되는 OSPF(Open Shortest Path First)방식의 프로토콜과 같이 현실에서 최단 경로를 찾기 적합한 알고리즘
+
+단점: 음의 가중치 간선이 있으면 사용 불가
