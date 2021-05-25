@@ -1,6 +1,6 @@
 # Algorithm
 
-## Sorting 
+## Sorting
 
 <br>
 
@@ -76,9 +76,9 @@
 int res[MAX_SIZE];
 
 void merge(int* arr, int left, int mid, int right) {
-  
+
     int i = left, j = mid + 1, k = left;
-    
+
     while(i <= mid && j <= right) {
         if(arr[i] <= arr[j]) {
           res[k++] = arr[i++];
@@ -106,7 +106,7 @@ void merge(int* arr, int left, int mid, int right) {
 void mergeSort(int* arr, int left, int right) {
     if(left < right) {
       int mid = (left + right) / 2;
-      
+
       mergeSort(arr, left, mid);
       mergeSort(arr, mid + 1, right);
       merge(arr, left, mid, right);
@@ -114,7 +114,8 @@ void mergeSort(int* arr, int left, int right) {
 }
 
 ```
-장점: 안정 정렬(동일한 값에 대해 기존의 순서가 유지), 빠른 시간 복잡도 
+
+장점: 안정 정렬(동일한 값에 대해 기존의 순서가 유지), 빠른 시간 복잡도
 
 단점: 정렬된 배열을 담을 임시 배열이 하나 더 필요하다(메모리 공간을 배열크기만큼 더 사용)
 
@@ -136,9 +137,9 @@ void mergeSort(int* arr, int left, int right) {
 ```C++
 void heapify(int* arr, int len, int i) {
     int parent = i;
-    int leftChild = i * 2 + 1;  
+    int leftChild = i * 2 + 1;
     int rightChild = i * 2 + 2;
-    
+
     // 왼쪽 자식 노드와 부모 노드를 비교하여 큰 값을 부모 노드로 올린다.
     if (l < n && arr[p] < arr[l]) p = l;
 
@@ -161,13 +162,13 @@ void heapSort(int* arr) {
         heapify(arr, len, i);
     }
     for(int i = len - 1; i > 0; i--) {
-        swap(arr, 0, i);  
+        swap(arr, 0, i);
         heapify(arr, i, 0);
     }
 }
 ```
 
-장점: 추가적인 메모리 필요X, 빠른 시간 복잡도 
+장점: 추가적인 메모리 필요X, 빠른 시간 복잡도
 
 단점: 불안정 정렬
 
@@ -183,7 +184,7 @@ void heapSort(int* arr) {
 **분할 정복을 통한 구현(합병 정렬과 달리 퀵 정렬은 비균등하게 분할)**
 
 1. pivot을 선정
-  
+
 2. pivot을 기준으로 pivot보다 작은 요소들은 모두 pivot의 왼쪽, 큰 요소들은 오른쪽으로 이동
 
 3. pivot을 제외한 왼쪽 리스트와 오른쪽 리스트를 다시 정렬
@@ -248,7 +249,7 @@ void insertionSort() {
 
         for(j = i - 1; j >= 0; j--) {
             if(key >= arr[j]) break;
-            arr[j + 1] = arr[j]; 
+            arr[j + 1] = arr[j];
         }
         arr[j + 1] = key;
     }
@@ -313,7 +314,6 @@ void bubbleSort() {
 
 ![선택 정렬](https://user-images.githubusercontent.com/55429912/119270338-2aaaec80-bc37-11eb-9c10-9b35b28737f9.png)
 
-
 ```C++
 #define MAX_SIZE 5
 int arr[MAX_SIZE] = {9, 6, 7, 3, 5};
@@ -338,7 +338,6 @@ void selectionSort() {
 장점: 정렬을 위한 비교 횟수는 많으나 교환 횟수가 적어 역순 정렬에 효과적
 
 단점: 정렬을 위한 비교횟수가 많아서 이미 정렬된 상태에서 소수의 자료가 추가되면 재정렬시 최악의 처리속도
-
 
 <br>
 <hr>
@@ -505,3 +504,557 @@ void dijkstra(int start) {
 장점: 인터넷 라우팅에서 사용되는 OSPF(Open Shortest Path First)방식의 프로토콜과 같이 현실에서 최단 경로를 찾기 적합한 알고리즘
 
 단점: 음의 가중치 간선이 있으면 사용 불가
+
+<br>
+<hr>
+
+## Bellman-Ford(벨만-포드)
+
+<br>
+
+**최단 경로 알고리즘**
+
+`시간 복잡도: O(VE)`
+
+`V는 노드, E는 간선`
+
+`V - 1 번 인접한 모든 간선(E)들을 검사하는 과정`
+
+다익스트라를 개선한 최단 경로 알고리즘, 다익스트라의 경우 음의 싸이클이 있다면 무한 뺑뺑이
+(음수 가중치의 간선이 있다고 무조건 무한 뺑뺑이를 돌진 않음, 음의 싸이클이 있을 경우에만 -∞로 발산)
+
+**거리 값을 갱신하는 과정을 V - 1번으로 제한하여 음의 싸이클 유무 판별!**
+
+1. 시작 정점 결정
+2. 시작 정점부터 다른 정점까지의 거리 값 무한대로 초기화(시작 정점은 0)
+3. 현재 정점의 인접 정점들을 탐색하며, 기존의 거리값보다 더 짧은 거리값이 있을 경우 갱신
+4. 3번 과정을 V - 1번 반복
+5. 계속해서 갱신이 되는 경우 음수 사이클이 존재하는 것
+
+왜 V - 1번 일까?
+`노드의 개수가 V개 일때, MST의 개수는 V - 1개임`
+
+```C++
+// 음의 싸이클이 존재하는지 판별해주는 Bellman() 함수
+bool bellman() {
+    for (int i = 1; i <= N; i++) {
+        d[i] = INF;
+    }
+    d[1] = 0;
+
+    bool update = false;
+    // 4번을 수행하기 위한 for문
+    for(int loop = 0; loop < N - 1; loop++) {
+        update = false;
+        for(int curr = 1; curr <= N; curr++) {
+            for(int adj = 0; adj < graph[curr].size(); adj++) {
+                int next = graph[curr][adj].first;
+                int cost = graph[curr][adj].second;
+                if(d[curr] != INF && d[next] > d[curr] + cost) {
+                    update = true;
+                    d[next] > d[curr] + cost;
+                }
+            }
+        }
+        // 전체 노드에서 아무것도 갱신이 안됐다면 굳이 V - 1번까지 돌 필요도 없음
+        if (!update) { return update; }
+    }
+    return update;
+}
+```
+
+장점: 음의 가중치 간선이 있어도 사용 가능
+
+단점: 다익스트라에 비해 큰 시간복잡도(O(VE) > O((V + E)logV))
+
+<br>
+<hr>
+
+## KMP(Knuth, Morris, Prett)
+
+<br>
+
+**문자열 검색 알고리즘**
+
+`시간 복잡도: O(N + M)`
+
+<br>
+1. 접두사(prefix)와 접미사(suffix)가 같은 가장 긴 문자열 길이를 저장하는 배열(pi) 생성
+
+ex) 문자열 "ABAABAB"
+
+<table border="1" style="text-align: center">
+    <tr>
+        <th>idx</th>
+        <th>생성된 부분 문자열</th>
+        <th>접두사</th>
+        <th>중간 문자열</th>
+        <th>접미사</th>
+        <th>pi[idx]</th>
+    </tr>
+    <tr>
+        <td>0</td>
+        <td>A</td>
+        <td>-</td>
+        <td>A</td>
+        <td>-</td>
+        <td>0</td>
+    </tr>
+    <tr>
+        <td>1</td>
+        <td>AB</td>
+        <td>-</td>
+        <td>AB</td>
+        <td>-</td>
+        <td>0</td>
+    </tr>
+    <tr>
+        <td>2</td>
+        <td>ABA</td>
+        <td>A</td>
+        <td>B</td>
+        <td>A</td>
+        <td>1</td>
+    </tr>
+    <tr>
+        <td>3</td>
+        <td>ABAA</td>
+        <td>A</td>
+        <td>BA</td>
+        <td>A</td>
+        <td>1</td>
+    </tr>
+    <tr>
+        <td>4</td>
+        <td>ABAAB</td>
+        <td>AB</td>
+        <td>A</td>
+        <td>AB</td>
+        <td>2</td>
+    </tr>
+    <tr>
+        <td>5</td>
+        <td>ABAABA</td>
+        <td>ABA</td>
+        <td>-</td>
+        <td>ABA</td>
+        <td>3</td>
+    </tr>
+    <tr>
+        <td>6</td>
+        <td>ABAABAB</td>
+        <td>AB</td>
+        <td>AAB</td>
+        <td>AB</td>
+        <td>2</td>
+    </tr>
+</table>
+
+<br>
+2. pi배열을 이용하여 기존 문자열과 비교
+
+ex) 문자열 S1에 "ABAABACABAABAB"에 문자열 S2가 "ABAABAB"이 있는가
+
+    s1[6] != s2[6]
+
+<table /border="1">
+    <tr>
+        <td>인덱스</td>
+        <td>0</td>
+        <td>1</td>
+        <td>2</td>
+        <td>3</td>
+        <td>4</td>
+        <td>5</td>
+        <td>6</td>
+        <td>7</td>
+        <td>8</td>
+        <td>9</td>
+        <td>10</td>
+        <td>11</td>
+        <td>12</td>
+        <td>13</td>
+    </tr>
+    <tr>
+        <td>S1</td>
+        <td>A</td>
+        <td>B</td>
+        <td>A</td>
+        <td>A</td>
+        <td>B</td>
+        <td>A</td>
+        <td style="color: red">C</td>
+        <td>A</td>
+        <td>B</td>
+        <td>A</td>
+        <td>A</td>
+        <td>B</td>
+        <td>A</td>
+        <td>B</td>
+    </tr>
+        <tr>
+        <td>S2</td>
+        <td>A</td>
+        <td>B</td>
+        <td>A</td>
+        <td>A</td>
+        <td>B</td>
+        <td>A</td>
+        <td style="color: red">B</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+</table>
+
+<br>
+
+    s2의 부분문자열 "ABAABA"의 pi[5] = 3    // 3칸 이동
+
+<table /border="1">
+    <tr>
+        <td>인덱스</td>
+        <td>0</td>
+        <td>1</td>
+        <td>2</td>
+        <td>3</td>
+        <td>4</td>
+        <td>5</td>
+        <td>6</td>
+        <td>7</td>
+        <td>8</td>
+        <td>9</td>
+        <td>10</td>
+        <td>11</td>
+        <td>12</td>
+        <td>13</td>
+    </tr>
+    <tr>
+        <td>S1</td>
+        <td>A</td>
+        <td>B</td>
+        <td>A</td>
+        <td style="color: green">A</td>
+        <td style="color: green">B</td>
+        <td style="color: green">A</td>
+        <td>C</td>
+        <td>A</td>
+        <td>B</td>
+        <td>A</td>
+        <td>A</td>
+        <td>B</td>
+        <td>A</td>
+        <td>B</td>
+    </tr>
+        <tr>
+        <td>S2</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td style="color: green">A</td>
+        <td style="color: green">B</td>
+        <td style="color: green">A</td>
+        <td>A</td>
+        <td>B</td>
+        <td>A</td>
+        <td>B</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+</table>
+
+<br>
+
+    s1[6] != s2[4]
+
+<table /border="1">
+    <tr>
+        <td>인덱스</td>
+        <td>0</td>
+        <td>1</td>
+        <td>2</td>
+        <td>3</td>
+        <td>4</td>
+        <td>5</td>
+        <td>6</td>
+        <td>7</td>
+        <td>8</td>
+        <td>9</td>
+        <td>10</td>
+        <td>11</td>
+        <td>12</td>
+        <td>13</td>
+    </tr>
+    <tr>
+        <td>S1</td>
+        <td>A</td>
+        <td>B</td>
+        <td>A</td>
+        <td>A</td>
+        <td>B</td>
+        <td>A</td>
+        <td style="color: red">C</td>
+        <td>A</td>
+        <td>B</td>
+        <td>A</td>
+        <td>A</td>
+        <td>B</td>
+        <td>A</td>
+        <td>B</td>
+    </tr>
+        <tr>
+        <td>S2</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td>A</td>
+        <td>B</td>
+        <td>A</td>
+        <td style="color: red">A</td>
+        <td>B</td>
+        <td>A</td>
+        <td>B</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+</table>
+
+<br>
+
+    s2의 부분문자열 "ABA"의 pi[2] = 1    // 1칸 이동
+
+<table /border="1">
+    <tr>
+        <td>인덱스</td>
+        <td>0</td>
+        <td>1</td>
+        <td>2</td>
+        <td>3</td>
+        <td>4</td>
+        <td>5</td>
+        <td>6</td>
+        <td>7</td>
+        <td>8</td>
+        <td>9</td>
+        <td>10</td>
+        <td>11</td>
+        <td>12</td>
+        <td>13</td>
+    </tr>
+    <tr>
+        <td>S1</td>
+        <td>A</td>
+        <td>B</td>
+        <td>A</td>
+        <td>A</td>
+        <td>B</td>
+        <td style="color: green">A</td>
+        <td>C</td>
+        <td>A</td>
+        <td>B</td>
+        <td>A</td>
+        <td>A</td>
+        <td>B</td>
+        <td>A</td>
+        <td>B</td>
+    </tr>
+        <tr>
+        <td>S2</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td style="color: green">A</td>
+        <td>B</td>
+        <td>A</td>
+        <td>A</td>
+        <td>B</td>
+        <td>A</td>
+        <td>B</td>
+        <td></td>
+        <td></td>
+    </tr>
+</table>
+
+<br>
+
+    s1[6] != s2[2]
+
+<table /border="1">
+    <tr>
+        <td>인덱스</td>
+        <td>0</td>
+        <td>1</td>
+        <td>2</td>
+        <td>3</td>
+        <td>4</td>
+        <td>5</td>
+        <td>6</td>
+        <td>7</td>
+        <td>8</td>
+        <td>9</td>
+        <td>10</td>
+        <td>11</td>
+        <td>12</td>
+        <td>13</td>
+    </tr>
+    <tr>
+        <td>S1</td>
+        <td>A</td>
+        <td>B</td>
+        <td>A</td>
+        <td>A</td>
+        <td>B</td>
+        <td>A</td>
+        <td style="color: red">C</td>
+        <td>A</td>
+        <td>B</td>
+        <td>A</td>
+        <td>A</td>
+        <td>B</td>
+        <td>A</td>
+        <td>B</td>
+    </tr>
+        <tr>
+        <td>S2</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td>A</td>
+        <td style="color: red">B</td>
+        <td>A</td>
+        <td>A</td>
+        <td>B</td>
+        <td>A</td>
+        <td>B</td>
+        <td></td>
+        <td></td>
+    </tr>
+</table>
+
+<br>
+
+    s1[6] != s2[0]  // 겹치는 것이 없어서 1칸만 이동
+
+<table /border="1">
+    <tr>
+        <td>인덱스</td>
+        <td>0</td>
+        <td>1</td>
+        <td>2</td>
+        <td>3</td>
+        <td>4</td>
+        <td>5</td>
+        <td>6</td>
+        <td>7</td>
+        <td>8</td>
+        <td>9</td>
+        <td>10</td>
+        <td>11</td>
+        <td>12</td>
+        <td>13</td>
+    </tr>
+    <tr>
+        <td>S1</td>
+        <td>A</td>
+        <td>B</td>
+        <td>A</td>
+        <td>A</td>
+        <td>B</td>
+        <td>A</td>
+        <td style="color: red">C</td>
+        <td>A</td>
+        <td>B</td>
+        <td>A</td>
+        <td>A</td>
+        <td>B</td>
+        <td>A</td>
+        <td>B</td>
+    </tr>
+        <tr>
+        <td>S2</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td style="color: red">A</td>
+        <td>B</td>
+        <td>A</td>
+        <td>A</td>
+        <td>B</td>
+        <td>A</td>
+        <td>B</td>
+        <td></td>
+    </tr>
+</table>
+
+<br>
+
+    s1문자열안에 s2문자열 포함
+
+<table /border="1">
+    <tr>
+        <td>인덱스</td>
+        <td>0</td>
+        <td>1</td>
+        <td>2</td>
+        <td>3</td>
+        <td>4</td>
+        <td>5</td>
+        <td>6</td>
+        <td>7</td>
+        <td>8</td>
+        <td>9</td>
+        <td>10</td>
+        <td>11</td>
+        <td>12</td>
+        <td>13</td>
+    </tr>
+    <tr>
+        <td>S1</td>
+        <td>A</td>
+        <td>B</td>
+        <td>A</td>
+        <td>A</td>
+        <td>B</td>
+        <td>A</td>
+        <td>C</td>
+        <td style="color: yellow">A</td>
+        <td style="color: yellow">B</td>
+        <td style="color: yellow">A</td>
+        <td style="color: yellow">A</td>
+        <td style="color: yellow">B</td>
+        <td style="color: yellow">A</td>
+        <td style="color: yellow">B</td>
+    </tr>
+        <tr>
+        <td>S2</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td style="color: yellow">A</td>
+        <td style="color: yellow">B</td>
+        <td style="color: yellow">A</td>
+        <td style="color: yellow">A</td>
+        <td style="color: yellow">B</td>
+        <td style="color: yellow">A</td>
+        <td style="color: yellow">B</td>
+    </tr>
+</table>
