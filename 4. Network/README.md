@@ -138,15 +138,20 @@ www.example.com/show?name1=value1&name2=value2
 
 흐름 제어 방식
 
-1. Stop & Wait: 매번 전송한 패킷에 대해 확인응답을 받아야만 그 다음 패킷을 전송하는 방법
-
+1. Stop & Wait
+   
    ![image](https://user-images.githubusercontent.com/55429912/120322385-50af4b80-c31f-11eb-9bfa-3ac3898f0294.png)
 
-2. 슬라이딩 윈도우: <u>수신 측에서 설정한 윈도우 크기만큼 송신측에서 확인 응답 없이 세그먼트를 전송</u>할 수 있게 하여 데이터 흐름을 동적으로 조절하여 제어하는 기법
+   `매번 전송한 패킷에 대해 확인응답을 받아야만 그 다음 패킷을 전송하는 방법`
 
-   - 송신 버퍼의 범위는 수신 측의 여유 버퍼 공간을 반영하여 동적으로 바뀜
+
+2. 슬라이딩 윈도우
 
    ![image](https://user-images.githubusercontent.com/55429912/120322412-586ef000-c31f-11eb-91d5-9fc8292c93b5.png)
+
+   `수신 측에서 설정한 윈도우 크기만큼 송신측에서 확인 응답 없이 세그먼트를 전송할 수 있게 하여 데이터 흐름을 동적으로 조절하여 제어하는 기법`
+
+   - 송신 버퍼의 범위는 수신 측의 여유 버퍼 공간을 반영하여 동적으로 바뀜
 
 **혼잡제어(Congestion control)란?**
 
@@ -157,6 +162,8 @@ www.example.com/show?name1=value1&name2=value2
 혼잡 제어 방식
 
 1. AIMD(Additive Increase/ Muticative Decrease)
+
+   ![image](https://user-images.githubusercontent.com/55429912/120349614-371afd80-c339-11eb-8e5c-c07848c137a8.png)
 
    `처음 패킷을 하나씩 보내고 문제없이 도착하면 윈도우 크기(단위 시간 내에 보내는 패킷의 수)를 1씩 증가시켜가며 전송하는 방법. 만일 패킷 전송을 실패하거나 일정 시간이 넘으면 패킷을 보내는 속도를 절반으로 줄임`
 
