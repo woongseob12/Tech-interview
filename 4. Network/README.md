@@ -863,6 +863,51 @@ Scale-out: 여러대의 서버가 나눠서 일하도록 함
 
 ![image](https://user-images.githubusercontent.com/55429912/120473141-ac420d80-c3e1-11eb-9fba-289ef97c51b1.png)
 
+### DHCP & ARP
+
+**DHCP(Dynamic Host Configuration Protocol)란?**
+
+`호스트의 IP 주소 및 TCP/IP 설정을 클라이언트에 자동으로 제공하는 프로토콜`
+
+![image](https://user-images.githubusercontent.com/55429912/120500105-8e81a200-c3fb-11eb-8f41-3b602a36c058.png)
+
+1. 사용자의 PC는 DHCP 서버에서 사용자 자신의 IP주소, 가장 가까운 라우터의 IP주소, 가장 가까운 DNS서버의 IP주소를 받는다.
+2. ARP 프로토콜을 이용하여 IP주소를 기반으로 가장 가까운 라우터의 MAC주소를 알아낸다.
+  - MAC(Media Access Control) 주소: 네트워크 카드 하드웨어에 부여된 고유한 물리적 주소
+3. 2의 과정을 통해 외부와 통신할 준비를 마친 뒤, DNS Query를 DNS 서버에 송신한다. DNS 서버는 이에대한 결과로 웹 서버의 IP주소를 사용자 PC에게 돌려준다.
+4. HTTP Request를 위해 TCP 소켓을 개방하고 연결한다.(이 과정에서 3-way-handshaking 발생)
+5. 이에 대한 응답으로 웹페이지의 정보가 사용자의 PC로 들어온다.
+
+---
+
+## CORS
+
+**CORS(Cross-Origin Resource Sharing)란?**
+
+`서로 다른 Origin(도메인 혹은 포트가 다른 것)에서 리소스를 공유 할 수 있도록 하는 정책`
+
+- 브라우저는 SOP에 의해 서로 다른 Origin에서의 자원 공유를 제한
+  - SOP(Same-Origin Policy): 웹 브라우저 보안을 위해 프로토콜, 호스트, 포트가 동일한 서버로만 AJAX요청을 주고 받을 수 있도록 한 정책
+- CORS를 통해 CORS정책에 부합하는 요청은 허용하는 것
+
+**CORS 설정방법**
+
+- 서버에서 특정 도메인에서의 요청을 허용
+   - API의 응답 헤더에 "Access-Control-Allow-Origin" 값을 넣어줌으로써 CORS 정책을 따르도록 할 수 있음.
+   - API에 대해 개별적으로 적용되는 사항이기 때문에, 모든 API에 일일이 대응해주어야 함
+   
+   ```javascript
+   app.use((req. res, next) => {
+      res.header("Access-Control-Allow-Origin","*");   // 모든 도메인
+      res.header("Access-Control-Allow-Origin","https://www.naver.com/");   // 특정 도메인
+   });
+   ```
+- Node.js Express 미들웨어 CORS
+  - CORS라이브러리를 Express 서버에 설치해서 사용
+  ```javascript
+   npm i cors --save
+  ```
+
 ---
 
 ## ARP Spoofing
