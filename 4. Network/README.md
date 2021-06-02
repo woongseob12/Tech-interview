@@ -139,11 +139,10 @@
 흐름 제어 방식
 
 1. Stop & Wait
-   
+
    ![image](https://user-images.githubusercontent.com/55429912/120322385-50af4b80-c31f-11eb-9bfa-3ac3898f0294.png)
 
    `매번 전송한 패킷에 대해 확인응답을 받아야만 그 다음 패킷을 전송하는 방법`
-
 
 2. 슬라이딩 윈도우
 
@@ -189,7 +188,7 @@
      - 임계점에 도달하면 선형적으로 1씩 윈도우 크기를 증가
 
 3. Fast Retransmit(빠른 재전송)
-   
+
    ![image](https://user-images.githubusercontent.com/55429912/120423856-32d8f980-c3a6-11eb-98a8-a6b4b788b1a6.png)
 
    `수신측에서는 잘 도착한 마지막 패킷의 다음 순번을 ACK패킷에 실어서 보내고, 이런 중복 ACK를 3개 받으면 재전송이 이루어짐`
@@ -214,13 +213,15 @@
 - ARQ(Automatic Repeat Request) 기법을 사용해 프레임이 손상되었거나 손실되었을 경우, 재전송을 통해 오류를 복구
 
 1. Stop and Wait ARQ
+
    - 송신측에서 1개의 프레임을 송신하고, 수신측에서 수신된 프레임의 에러 유무에 따라 ACK/ NAK을 보내는 방식
    - 수신측이 데이터를 받지 못했을 경우, NAK을 보내고 NAK를 받은 송신측은 데이터를 재전송
    - 데이터나 ACK이 분실되었을 경우 일정 간격의 시간을 두고 타임아웃이 발생하면 송신측은 데이터를 재전송
 
 2. Go-Back-n ARQ(슬라이딩 윈도우)
+
    - 전송된 프레임이 손상되거나 분실된 경우, 확인된 마지막 프레임 이후의 모든 프레임을 재전송
-   ![image](https://user-images.githubusercontent.com/55429912/120425976-28206380-c3aa-11eb-8f8f-c7317b2183b0.png)
+     ![image](https://user-images.githubusercontent.com/55429912/120425976-28206380-c3aa-11eb-8f8f-c7317b2183b0.png)
 
 3. SR(Selective-Reject) ARQ
    - 손상, 손실된 프레임만 재전송(GBn ARQ의 확인된 마지막 프레임 이후의 모든 프레임을 재전송하는 단점을 보완한 기법)
@@ -249,7 +250,6 @@
       <td>비용 및 유지관리 비용이 높음</td>
    </tr>
 </table>
-
 
 **TCP Header**
 
@@ -372,7 +372,7 @@ TCP는 상위계층으로부터 데이터를 받아 **헤더**를 추가해 IP�
       <td>헤더와 데이터의 에러 확인 용도<br>UDP는 에러 복구를 위한 필드가 불필요하기 때문에 TCP 헤더에 비해 간단</td>
       <td>16</td>
    </tr>
-</table>   
+</table>
 
 <br>
 
@@ -476,16 +476,14 @@ TCP의 신뢰성 보장을 위해 연결해제시에도 4-way handshake를 통�
   - 통상적으로 TCP 소켓 사용, 예외적으로 스트리밍 서비스에서는 UDP를 사용하는 경우도 있음
 - TCP/IP를 이용하는 응용 프로토콜(applciation protocol)
 - HTTP는 연결 상태를 유지하지 않는 비연결성 프로토콜
-   - 비연결: 클라이언트가 요청을 서버에 보내고 서버가 적절한 응답을 보내면 바로 연결이 끊김
-      
-      ```
-      이전 요청과 다음 요청이 연결되어 있지 않다는 의미!! 
-      하나의 요청/응답 안에서는 연결된 상태로 통신
-      HTTP프로토콜이 TCP기반으로 동작: 하나의 요청- 응답
-      ```
-   - 연결을 끊는 순간 클라이언트와 서버의 통신은 끝나며 상태 정보를 유지하지 않음
-   - 이러한 단점을 해결하기 위해 Cookie와 Session 등장
-
+  - 비연결: 클라이언트가 요청을 서버에 보내고 서버가 적절한 응답을 보내면 바로 연결이 끊김
+    ```
+    이전 요청과 다음 요청이 연결되어 있지 않다는 의미!!
+    하나의 요청/응답 안에서는 연결된 상태로 통신
+    HTTP프로토콜이 TCP기반으로 동작: 하나의 요청- 응답
+    ```
+  - 연결을 끊는 순간 클라이언트와 서버의 통신은 끝나며 상태 정보를 유지하지 않음
+  - 이러한 단점을 해결하기 위해 Cookie와 Session 등장
 
 ### HTTPS(HyperText Transfer Protocol Secure)
 
@@ -520,7 +518,6 @@ TCP의 신뢰성 보장을 위해 연결해제시에도 4-way handshake를 통�
 **HTTPS**
 
 ![image](https://user-images.githubusercontent.com/55429912/120432120-6c186600-c3b4-11eb-81db-ce88aacf245d.png)
-
 
 1. 클라이언트가 SSL로 암호화된 페이지를 요청
 2. 서버는 클라이언트에게 인증서를 전송
@@ -570,13 +567,205 @@ www.example.com/show?name1=value1&name2=value2
 - 즉, 현재 접속한 사용자가 이전에 접속했던 사용자와 같은 사용자인지 아닌지 알수 있는 방법이 없다.
 - 연결을 유지하지 않기 때문에 자원 낭비가 줄어드는 것은 큰 장점이지만, 통신마다 새로 연결하기 때문에 클라이언트는 매 요청마다 인증을해야하는 단점이 존재한다.
 - HTTP 프로토콜에서 상태를 유지하기 위한 기술로 Cookie와 Session이 있다.
-  
+
 ### 쿠키(Cookie)란?
 
+`클라이언트 로컬에 저장되는 키와 값이 들어있는 파일`
 
+- 서버가 HTTP 응답 헤더의 `Set-Cookie`에 내용을 넣어 전달하면, 브라우저는 이 내용을 자체적으로 브라우저에 저장
+- 브라우저는 서버에 접속할 때마다 쿠키의 내용을 요청헤더에 넣어서 함께 전달
+- 이름, 값, 유효 시간, 경로 등을 포함하고 있음
+- 클라이언트의 상태 정보를 브라우저에 저장하여 참조
 
+- 구성 요소
+  - 쿠키의 이름(name)
+  - 쿠키의 값(value)
+  - 쿠키의 만료시간(Expires)
+  - 쿠키를 전송할 도메인 이름(Domain)
+  - 쿠키를 전송할 경로(Path)
+  - 보안 연결 여부(Secure)
+  - httpOnly 여부(httpOnly)
+  - httpOnly 옵션이 설정된 쿠키는 document.cookie로 쿠키 정보를 읽을 수 없음(쿠키 보호 가능)
 
+**동작 방식**
 
+![image](https://user-images.githubusercontent.com/55429912/120448562-a559d180-c3c6-11eb-98b4-abdada97f602.png)
+
+1. 클라이언트가 서버에 요청
+2. 상태를 유지하고 싶은 값을 쿠키로 생성후 응답할때 HTTP 헤더에 쿠키를 포함해서 전송
+   ```java
+   Set-Cookie: id=id
+   ```
+3. 전달받은 쿠키는 웹브라우저에서 관리하고 있다가, 다음 요청때 쿠키를 HTTP헤더에 넣어서 전송
+   ```java
+   cookie: id=id
+   ```
+4. 서버에서는 쿠키 정보를 읽어 이전 상태 정보를 확인한 후 응답
+
+### 세션(Session)이란?
+
+`클라이언트와 웹서버 간 네트워크 연결이 지속 유지되고 있는 상태`
+
+1. 클라이언트가 서버에 접속시 세션ID를 발급 받음
+2. 클라이언트는 세션ID에 대해 쿠키를 사용해서 저장
+3. 클라이언트는 서버에 요청할 때, 쿠키의 세션 ID를 서버에 전달해서 사용
+4. 서버는 세션 ID를 전달 받아 별다른 작업없이 세션 ID로 세션에 있는 클라이언트 정보를 가져옴
+5. 클라이언트 정보를 가지고 서버 요청을 처리하여 클라이언트에게 응답
+
+**세션도 쿠키를 사용하여 값을 주고 받으며 클라이언트의 상태 정보를 유지한다. 즉, 상태 정보를 유지하는 수단은 쿠키이다**
+
+**쿠키와 세션의 차이점**
+
+- 저장 위치
+  - 쿠키: 클라이언트(서버 자원 사용 X)
+  - 세션: 서버(서버 메모리로 로딩되기 떄문에 세션이 생길 때마다 리소스를 차지)
+- 보안
+  - 쿠키: 클라이언트에 저장되므로 보안에 취약
+  - 세션: 쿠키를 이용해 Session ID만 저장하고 이 값으로 구분해서 서버에서 처리하므로 비교적 보안성이 좋음
+- 라이프 사이클
+  - 쿠키: 만료시간에 따라 브라우저를 종료해도 계속해서 남아 있을 수 있음
+  - 세션: 만료시간을 정할 수 있지만 브라우저가 종료되면 만료시간에 상관없이 삭제된다.
+- 속도
+  - 쿠키: 클라이언트에 저장되어서 서버에 요청시 빠름
+  - 세션: 실제 저장된 정보가 서버에 있으므로 서버의 처리가 필요해 쿠키보다 느리다.
+- 용량 제한
+  - 쿠키: 한 도메인당 20개, 하나의 쿠키당 4KB로 제한
+  - 세션: 개수나 용량의 제한이 없음
+
+---
+
+## REST & RESTful 이란?
+
+### REST(Representational State Transfer)란?
+
+`웹에 존재하는 모든 자원(이미지, 동영상, DB 자원 등)에 고유한 URI를 부여해 활용하는 것`
+
+**특징**
+
+- 웹의 장점을 최대한 활용할 수 있는 클라이언트와 서버간 통신 방식 중 하나
+- HTTP URI을 통해 자원을 명시하고, HTTP Method(GET, POST, PUT, DELETE)를 통해 해당 자원에 대한 CRUD Operation을 적용하는 것
+
+  - 즉, REST는 자원 기반의 구조(ROA, Resource Oriented Architecture) 설계의 중심에 Resource가 있고, HTTP Method를 통해 Resource를 처리하도록 설계된 아키텍쳐를 의미한다.
+  - 웹 사이트의 이미지, 텍스트, DB 내용 등의 모든 자원에 고유한 ID인 HTTP URI를 부여
+
+**구성 요소**
+
+1. 자원(Resource): URI
+   - 모든 자원에 고유한 ID가 존재하고, 이 자원은 Server에 존재
+   - 자원을 구별하는 ID는 '/groups/:group_id'와 같은 **HTTP URI**이다.
+   - Client는 URI를 이용하여 자원을 지정, 해당 자원의 상태에 대한 조작을 Server에 요청
+2. 행위(Verb): HTTP Method
+   - HTTP 프로토콜의 Method를 사용한다
+     - GET, POST, PUT, DELETE
+3. 표현(Representation of Resource)
+   - Client가 자원의 상태에 대한 조작을 요청하면 Server는 이에 적절한 응답을 보냄
+   - REST에서 하나의 자원은 JSON, XML, TEXT, RSS 등 여러 형태로 나타내어 질 수 있음
+   - JSON, XML을 통해 데이터를 주고 받는 것이 일반적
+
+- 장점
+
+  - HTTP 표준 프로토콜에 따르는 모든 플랫폼에서 사용 가능
+  - 서버와 클라이언트의 역할을 명확하게 분리
+  - HTTP 프로토콜의 인프라를 그대로 사용하므로 REST API 사용을 위한 별도의 인프라를 구축할 필요가 없음
+
+- 단점
+  - 표준이 없음
+  - 사용할 수 있는 메소드가 4가지 뿐임(HTTP Method 형태가 제한적)
+
+<br>
+
+### REST API란?
+
+![image](https://user-images.githubusercontent.com/55429912/120452596-451a5e00-c3cd-11eb-9eb7-a98902709588.png)
+
+`REST 기반으로 서비스 API를 구현한 것`
+
+API(Application Programming Interface): 데이터와 기능의 집합을 제공하여 컴퓨터 프로그램간 상호작용을 촉진하며, 서로 정보를 교환 가능하도록 하는 것
+
+**특징**
+
+- 확장성과 재사용성을 높여 유지보수 및 운용을 편리하게 함
+- HTTP 표준을 기반으로 구현하므로, HTTP를 지원하는 프로그램 언어로 클라이언트, 서버를 구현할 수 있음
+
+<br>
+
+### RESTful이란?
+
+![image](https://user-images.githubusercontent.com/55429912/120452295-1308fc00-c3cd-11eb-9c89-dd106d121a4c.png)
+
+`REST 형식을 따른 시스템`
+
+**목적**
+
+- 이해하기 쉽고 사용하기 쉬운 REST API를 만드는 것
+
+**RESTful 하지 못한 경우?**
+
+1. CRUD 기능을 모두 POST로만 처리하는 API
+2. route에 resource, id 외의 정보가 들어가는 경우(/students/updateName)
+
+---
+
+## Load Balancing(로드 밸런싱)
+
+![image](https://user-images.githubusercontent.com/55429912/120454916-477db780-c3cf-11eb-9243-1aa724dd1d9f.png)
+
+`둘 이상의 CPU or 저장장치와 같은 컴퓨터 자원들에게 작업을 나누는 것`
+
+Scale-up: 하드웨어의 성능을 올림
+
+Scale-out: 여러대의 서버가 나눠서 일하도록 함
+
+로드 밸런싱: 여러 서버에게 균등하게 트래픽을 분산시켜주는 것
+
+**로드 벨런서 주요 기능**
+
+- NAT(Network Address Translation)
+
+  - 사설 IP주소를 공인 IP주소로 바꾸는데 사용하는 통신망의 주소 변조기
+
+- Tunneling
+
+  - 인터넷상에서 눈에 보이지 않는 통로를 만들어 통신할 수 있게하는 개념
+  - 데이터를 캡슐화해서 연결된 상호 간에만 캡슌화된 패킷을 구별해 캡슐화를 해제할 수 있음
+
+- DSR(Dynamaic Source Routing Protocol)
+  ![image](https://user-images.githubusercontent.com/55429912/120455945-24073c80-c3d0-11eb-93a0-5714ce78584e.png)
+
+  - 로드 벨런서 사용 시 서버에서 클라이언트로 되돌아가는 경우 목적지 주소를 스위치 IP주소가 아닌 클라이언트의 IP주소로 전달하여 네트워크 스위치를 거치지 않고 바로 클라이언트를 찾아가는 개념
+
+**로드 벨런서 종류**
+
+- L2: MAC주소를 바탕으로 Load Balancing
+- L3: IP주소를 바탕으로 Load Balancing
+- L4:
+  ![image](https://user-images.githubusercontent.com/55429912/120456649-c6272480-c3d0-11eb-954b-2e9de41fe60a.png)
+  - Transport Layer에서 Load Balancing
+  - TCP, UDP
+- L7:
+  ![image](https://user-images.githubusercontent.com/55429912/120456817-ebb42e00-c3d0-11eb-9edc-cedfc8dc88e0.png)
+  - Application Layer에서 Load Balancing
+  - HTTP, HTTPS, FTP
+
+**로드 벨런서가 서버를 선택하는 방식**
+
+1. Round Robin: CPU 스케줄링의 라운드 로빈 방식 활용
+2. Least Connections: 연결 개수가 가장 적은 서버 선택(트래픽으로 인해 세션이 길어지는 경우 권장)
+3. Source: 사용자 IP를 해싱하여 분배(특정 사용자가 항상 같은 서버로 연결되는 것 보장)
+
+**로드 밸런서 장애 대비**
+
+![image](https://user-images.githubusercontent.com/55429912/120457067-2027ea00-c3d1-11eb-9fb8-785cdc2ef082.png)
+
+`Load Balancer를 이중화하여 장애를 대비`
+
+1. 이중화된 Load Balancer들은 서로 Health Check
+   - Active
+   - Passive
+2. Main Load Balancer가 동작하지 않으면 가상IP는 여분의 Load Balancer로 변경
+3. 여분의 Load Balancer로 운영
+
+---
 
 ## ARP Spoofing
 
