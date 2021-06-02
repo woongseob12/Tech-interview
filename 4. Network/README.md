@@ -17,6 +17,9 @@
 
 ![image](https://user-images.githubusercontent.com/55429912/120319789-5ce5d980-c31c-11eb-8e73-021f9fb224bd.png)
 
+- 프로토콜을 기능별로 나눔
+- 각 계층은 하위 계층의 기능만을 이용하고, 상위 계층에게 기능을 제공
+
 <br>
 <table border="3">
     <tr>
@@ -30,7 +33,7 @@
     <tr>
         <td>7</td>
         <td>응용(Application)</td>
-        <td>서비스 제공</td>
+        <td>사용자 인터페이스, 데이터베이스 관리 등의 서비스 제공</td>
         <td>Message, Data</td>
         <td>DNS</td>
         <td>L7 Switch</td>
@@ -46,15 +49,26 @@
     <tr>
         <td>5</td>
         <td>세션(Session)</td>
-        <td>데이터 통신을 위한 논리적 연결 담당</td>
+        <td>
+            <ul>
+               <li>데이터 통신을 위한 논리적 연결 담당</li>
+               <li>TCP/IP세션을 만들고 없애는 책임을 진다</li>
+            </ul>
+         </td>
         <td></td>
-        <td></td>
+        <td>API, Socket</td>
         <td>L5 Switch</td>
     </tr>
     <tr>
         <td>4</td>
         <td>전송(Transport)</td>
-        <td>TCP/ UDP 프로토콜을 통해 통신 활성화</td>
+        <td>
+            <ul>
+               <li>TCP/ UDP 프로토콜을 통해 통신 활성화</li>
+               <li>TCP: 신뢰성, 연결지향적</li>
+               <li>UDP: 비신뢰성, 비연결성, 실시간</li>
+            </ul>
+        </td>
         <td>Segment</td>
         <td>TCP, UDP</td>
         <td>L4 Switch</td>
@@ -62,7 +76,13 @@
     <tr>
         <td>3</td>
         <td>네트워크(Network)</td>
-        <td>데이터를 목적지까지 가장 안전하고 빠르게 전달(라우팅)</td>
+        <td>
+            <ul>
+               <li>데이터를 목적지까지 가장 안전하고 빠르게 전달하는 기능</li>
+               <li>라우터를 통해 이동할 경로를 선택하여 IP주소를 지정하고, 해당 경로에 따라 패킷을 전달</li>
+               <li>라우팅, 흐름제어, 오류제어, 세그먼테이션 등을 수행</li>
+            </ul>      
+         </td>
         <td>Packet</td>
         <td>IP, ARP</td>
         <td>라우터</td>
@@ -70,7 +90,13 @@
     <tr>
         <td>2</td>
         <td>데이터 링크(Data link)</td>
-        <td>물리 계층으로 송수신되는 정보를 관리, Mac주소를 통해 통신</td>
+        <td>
+            <ul>
+               <li>물리 계층으로 송,수신되는 정보의 오류와 흐름을 관리하여 안전한 정보의 전달을 수행할 수 있도록 도움</li>
+               <li>MAC주소를 이용해 통신</li>
+               <li>Frame에 MAC주소를 부요하고 에러검출, 재전송, 흐름 제어를 진행한다</li>
+            </ul>
+         </td>
         <td>Frame</td>
         <td>MAC, PPP</td>
         <td>브리지, 스위치</td>
@@ -87,32 +113,6 @@
 <br>
 <hr>
 
-## GET & POST
-
-<br>
-
-### GET:
-
-- 클라이언트에서 서버로 어떠한 리소스에서 **데이터를 요청**하기 위해 사용되는 메서드
-- GET을 통한 요청은 URL주소 끝에 파라미터로 포함되어 전송되며, 이 부분을 쿼리 스트링(query string)이라 부름
-
-```
-www.example.com/show?name1=value1&name2=value2
-```
-
-- 요청의 길이 제한이 있으며, 보안에 취약함(URL에 파라미터가 노출되기 때문에)
-
-### POST:
-
-- 클라이언트에서 서버로 리소스를 생성하거나 업데이트하기 위해 **데이터를 보낼 때** 사용되는 메서드
-- HTTP Request Message의 Body 부분에 데이터를 담아서 서버로 보냄
-- 길이 제한이 따로 없어서 용량이 큰 데이터를 보거나, 보안이 필요할 때 사용(데이터를 암호화하지 않으면 Body의 데이터도 볼 수는 있음)
-
-### 주요 차이점: GET은 HTTP Message에 Body가 없고, POST는 HTTP Message에 Body가 존재!!
-
-<br>
-<hr>
-
 ## TCP/UDP
 
 <br>
@@ -123,11 +123,11 @@ www.example.com/show?name1=value1&name2=value2
 
 ![image](https://user-images.githubusercontent.com/55429912/120324955-29a64900-c322-11eb-8274-48587566b752.png)
 
-- 서버와 클라이언트간에 데이터를 **신뢰성** 있게 전달하기 위해 만들어진 프로토콜
-- 데이터를 전송하기 전에 데이터 전송을 위한 연결을 만드는 **연결지향** 프로토콜
-- 흐름제어, 혼잡제어
+- **신뢰성** 있는 데이터 전송을 지원하는 **연결 지향형** 프로토콜
+- 흐름제어, 혼잡제어, 오류제어를 통해 신뢰성을 보장(그러나 이 때문에 UDP보다 전송 속도가 느림)
 - 전이중(Full-Duplex), Point-To-Point 방식
-- IP와 함께 사용되며, IP가 데이터의 배달을 처리한다면 TCP는 패킷을 추적 및 관리한다.
+- 일반적으로 IP와 함께 사용되며, IP가 데이터의 배달을 처리한다면 TCP는 패킷을 추적 및 관리한다.
+  - 데이터를 여러 개의 패킷들로 나누고 패킷 번호를 붙인 후 송신, 수신 측은 각 패킷들을 재조립
 
 **흐름제어(Flow control)란?**
 
@@ -165,7 +165,7 @@ www.example.com/show?name1=value1&name2=value2
 
    ![image](https://user-images.githubusercontent.com/55429912/120349614-371afd80-c339-11eb-8e5c-c07848c137a8.png)
 
-   `처음 패킷을 하나씩 보내고 문제없이 도착하면 윈도우 크기(단위 시간 내에 보내는 패킷의 수)를 1씩 증가시켜가며 전송하는 방법. 만일 패킷 전송을 실패하거나 일정 시간이 넘으면 패킷을 보내는 속도를 절반으로 줄임`
+   `처음 패킷을 하나씩 보내고 문제없이 도착하면 윈도우 크기(단위 시간 내에 보내는 패킷의 수)를 1씩 증가시켜가며 전송하는 방법. 만일 패킷 전송을 실패하거나 TIME_OUT이 되면 윈도우 크기를 절반으로 줄임`
 
    장점 :
 
@@ -177,6 +177,9 @@ www.example.com/show?name1=value1&name2=value2
    - 네트워크가 혼잡해지는 상황을 미리 감지하지 못함(네트워크가 혼잡해지고 나서야 대역폭을 줄이는 방식)
 
 2. Slow start
+
+   ![image](https://user-images.githubusercontent.com/55429912/120423796-163cc180-c3a6-11eb-9b05-894c6af82b34.png)
+
    `윈도우 크기를 2배씩 증가, 혼잡이 감지되면 윈도우 크기를 1로 줄임`
 
    - 시간이 지날수록 AIMD보다 빠르게 윈도우 크기를 증가시킴
@@ -186,6 +189,8 @@ www.example.com/show?name1=value1&name2=value2
      - 임계점에 도달하면 선형적으로 1씩 윈도우 크기를 증가
 
 3. Fast Retransmit(빠른 재전송)
+   
+   ![image](https://user-images.githubusercontent.com/55429912/120423856-32d8f980-c3a6-11eb-98a8-a6b4b788b1a6.png)
 
    `수신측에서는 잘 도착한 마지막 패킷의 다음 순번을 ACK패킷에 실어서 보내고, 이런 중복 ACK를 3개 받으면 재전송이 이루어짐`
 
@@ -194,15 +199,136 @@ www.example.com/show?name1=value1&name2=value2
    - 송신측에서 설정한 타임아웃까지 ACK를 받지 못하면 혼잡이 발생한 것으로 판단하여 혼잡 회피를 한다.
 
 4. Fast Recovery(빠른 회복)
+
+   ![image](https://user-images.githubusercontent.com/55429912/120423932-63209800-c3a6-11eb-9274-ef18e1897dac.png)
+
    `혼잡한 상태가 되면 윈도우 크기를 반으로 줄이고 선형 증가 시키는 방법`
 
-   -혼잡 상황 후에는 AIMD방식으로 동작
+   - 혼잡 상황 후 Slow Start에서 윈도우 크기를 키울 때 너무 오래 걸린다는 단점을 보완한 방식
+   - 혼잡 상황 후에는 AIMD방식으로 동작
+
+**오류제어란?**
+
+`오류를 검출하고 정정하는 기능`
+
+- ARQ(Automatic Repeat Request) 기법을 사용해 프레임이 손상되었거나 손실되었을 경우, 재전송을 통해 오류를 복구
+
+1. Stop and Wait ARQ
+   - 송신측에서 1개의 프레임을 송신하고, 수신측에서 수신된 프레임의 에러 유무에 따라 ACK/ NAK을 보내는 방식
+   - 수신측이 데이터를 받지 못했을 경우, NAK을 보내고 NAK를 받은 송신측은 데이터를 재전송
+   - 데이터나 ACK이 분실되었을 경우 일정 간격의 시간을 두고 타임아웃이 발생하면 송신측은 데이터를 재전송
+
+2. Go-Back-n ARQ(슬라이딩 윈도우)
+   - 전송된 프레임이 손상되거나 분실된 경우, 확인된 마지막 프레임 이후의 모든 프레임을 재전송
+   ![image](https://user-images.githubusercontent.com/55429912/120425976-28206380-c3aa-11eb-8f8f-c7317b2183b0.png)
+
+3. SR(Selective-Reject) ARQ
+   - 손상, 손실된 프레임만 재전송(GBn ARQ의 확인된 마지막 프레임 이후의 모든 프레임을 재전송하는 단점을 보완한 기법)
+   - 별도의 데이터 재정렬을 수행
+   - 수신측에 별도의 버퍼를 두어 받은 데이터의 정렬이 필요
+
+<table>
+   <tr>
+      <th>GBn(Go-Back-n) ARQ</th>
+      <th>SR(Selective-Reject) ARQ</th>
+   </tr>
+   <tr>
+      <td>손상, 손실된 프레임 이후의 모든 프레임을 재전송</td>
+      <td>손상, 손실된 프레임만을 재전송</td>
+   </tr>
+   <tr>
+      <td>구조가 비교적 간단하고 구현이 단순</td>
+      <td>구조가 복잡(프레임 재배열 등의 추가 로직 필요)</td>
+   </tr>
+   <tr>
+      <td>데이터 폐기 방식을 사용하여 추가적인 버퍼가 필요 없음</td>
+      <td>순차적이지 않은 프레임을 재배열하기 위한 버퍼가 필요</td>
+   </tr>
+   <tr>
+      <td>비용이 비교적 저렴</td>
+      <td>비용 및 유지관리 비용이 높음</td>
+   </tr>
+</table>
+
 
 **TCP Header**
 
 TCP는 상위계층으로부터 데이터를 받아 **헤더**를 추가해 IP로 전송
 
 ![image](https://user-images.githubusercontent.com/55429912/120325539-b8b36100-c322-11eb-995c-0b53bfcb99ce.png)
+
+<table border="1">
+   <tr>
+      <th>필드</th>
+      <th>내용</th>
+      <th>크기(bit)</th>
+   </tr>
+   <tr>
+      <td>Source Port</td>
+      <td>TCP로 연결되는 가상 회선 양단의 송신 프로세스의 포트 주소</td>
+      <td>16</td>
+   </tr>
+   <tr>
+      <td>Destination Port</td>
+      <td>TCP로 연결되는 가상 회선 양단의 수신 프로세스의 포트 주소</td>
+      <td>16</td>
+   </tr>
+   <tr>
+      <td>Sequence Number</td>
+      <td>송신자가 지정하는 순서 번호, 전송되는 바이트 수 기준으로 증가</td>
+      <td>32</td>
+   </tr>
+   <tr>
+      <td>Acknowledgment Number</td>
+      <td>수신 프로세스가 제대로 수신한 바이트의 수 응답 용</td>
+      <td>32</td>
+   </tr>
+   <tr>
+      <td>Header Length(Data Offset)</td>
+      <td>TCP 헤더 길이를 4Byte 단위로 표시</td>
+      <td>4</td>
+   </tr>
+   <tr>
+      <td>Resv(Reserved)</td>
+      <td>나중을 위해 0으로 채워진 예약 필드</td>
+      <td>6</td>
+   </tr>
+   <tr>
+      <td>Flag Bit</td>
+      <td>
+         <ul>
+            <li>URG: 긴급 위치 필드 유효 여부 설정</li>
+            <li>ACK: 응답 유효 여부 설정(정상 수신시 ACK(=SYN + 1)전송)</li>
+            <li>PSH: 수신측에 버퍼링된 데이터를 상위 계층에 즉시 전달</li>
+            <li>RST: 연결 리셋 응답 혹은 유효하지 않은 세그먼트 응답</li>
+            <li>SYN: 연결 설정 요청. 양쪽이 보낸 최초 패킷에만 SYN 플래그 설정</li>
+            <li>FIN: 연결 종료 의사 표시</li>
+         </ul>
+      </td>
+      <td>6</td>
+   </tr>
+   <tr>
+      <td>Window Size</td>
+      <td>수신 윈도우의 버퍼 크기 지정(0이면 송신 중지)<br> 상대방의 확인 없이 전송가능한 최대 바이트 수</td>
+      <td>16</td>
+   </tr>
+   <tr>
+      <td>TCP Checksum</td>
+      <td>헤더와 데이터의 에러 확인 용도</td>
+      <td>16</td>
+   </tr>
+   <tr>
+      <td>Urgent Pointer(긴급 위치)</td>
+      <td>현재 순서 번호부터 표시된 바이트 까지 긴급한 데이터임을 표시<br>
+      URG 플래그 비트가 지정된 경우에만 유효</td>
+      <td>16</td>
+   </tr>
+   <tr>
+      <td>Options</td>
+      <td>추가 옵션 있을 경우 표시</td>
+      <td>0 ~ 40</td>
+   </tr>
+</table>
 
 <br>
 
@@ -211,9 +337,42 @@ TCP는 상위계층으로부터 데이터를 받아 **헤더**를 추가해 IP�
 ![image](https://user-images.githubusercontent.com/55429912/120325014-332fb100-c322-11eb-8f72-66cdd55743b9.png)
 
 - 비연결형, 신뢰성이 없는 프로토콜
+- 데이터를 **데이터그램** 단위로 처리하는 프로토콜
 - 데이터 전송의 신속성(실시간 방송, 온라인 게임 등에서 사용)
-- 신뢰성보다는 연속성이 중요한 서비스에 사용
+- 신뢰성보다는 연속성이 중요한 서비스에 사용(RTP(Real-Time Transport Protocol), DNS)
 - UDP헤더의 Checksum 필드를 통해 최소한의 오류만 검출
+
+**UDP Header**
+
+![image](https://user-images.githubusercontent.com/55429912/120427071-38394280-c3ac-11eb-80ce-490c1c7abbc8.png)
+
+<table border="1">
+   <tr>
+      <th>필드</th>
+      <th>내용</th>
+      <th>크기(bit)</th>
+   </tr>
+   <tr>
+      <td>Source Port</td>
+      <td>송신 포트 번호</td>
+      <td>16</td>
+   </tr>
+   <tr>
+      <td>Destination Port</td>
+      <td>수신 포트 번호</td>
+      <td>16</td>
+   </tr>
+   <tr>
+      <td>Length</td>
+      <td>헤더와 데이터 포함 전체 길이</td>
+      <td>16</td>
+   </tr>
+   <tr>
+      <td>Checksum</td>
+      <td>헤더와 데이터의 에러 확인 용도<br>UDP는 에러 복구를 위한 필드가 불필요하기 때문에 TCP 헤더에 비해 간단</td>
+      <td>16</td>
+   </tr>
+</table>   
 
 <br>
 
@@ -302,6 +461,7 @@ TCP의 신뢰성 보장을 위해 연결해제시에도 4-way handshake를 통�
    `Server: ClOSED`
 
 <br>
+
 <hr>
 
 ## HTTP & HTTPS
@@ -310,18 +470,113 @@ TCP의 신뢰성 보장을 위해 연결해제시에도 4-way handshake를 통�
 
 ### HTTP(HyperText Transfer Protocol)
 
-- 인터넷 상에서 클라이언트와 서버가 자원을 주고 받을 때 쓰는 통신 규약
-- 텍스트 교환
+- 인터넷 상에서 클라이언트와 서버간에 요청/응답으로 정보를 주고 받을 수 있는 프로토콜
+- 주로 HTML 문서를 주고받는데 사용
+- TCP와 UDP를 사용하며, **80번 포트** 사용
+  - 통상적으로 TCP 소켓 사용, 예외적으로 스트리밍 서비스에서는 UDP를 사용하는 경우도 있음
 - TCP/IP를 이용하는 응용 프로토콜(applciation protocol)
-- HTTP는 연결 상태를 유지하지 않는 비연결성 프로토콜(이러한 단점을 해결하기 위해 Cookie와 Session 등장)
+- HTTP는 연결 상태를 유지하지 않는 비연결성 프로토콜
+   - 비연결: 클라이언트가 요청을 서버에 보내고 서버가 적절한 응답을 보내면 바로 연결이 끊김
+      
+      ```
+      이전 요청과 다음 요청이 연결되어 있지 않다는 의미!! 
+      하나의 요청/응답 안에서는 연결된 상태로 통신
+      HTTP프로토콜이 TCP기반으로 동작: 하나의 요청- 응답
+      ```
+   - 연결을 끊는 순간 클라이언트와 서버의 통신은 끝나며 상태 정보를 유지하지 않음
+   - 이러한 단점을 해결하기 위해 Cookie와 Session 등장
+
 
 ### HTTPS(HyperText Transfer Protocol Secure)
 
-- 인터넷 상에서 정보를 암호화하는 SSL 프로토콜을 사용해 클라이언트와 서버가 자원을 주고 받을 때 쓰는 통신 규약
-- 텍스트를 암호화(공개키 암호화 방식)
+- HTTP 통신하는 소켓 부분을 인터넷 상에서 정보를 암호화 하는 SSL(Secure Socket Layer)이라는 프로토콜로 대체한 것
+- HTTP는 TCP와 통신했지만, HTTPS는 SSL과 통신하고 SSL이 TCP와 통신
+- 장점
+  - 네트워크 상에서 열람, 수정이 불가능하므로 안전하다.
+- 단점
+  - 암호화를 하는 과정이 웹 서버에 부하를 준다.
+  - HTTPS는 설치 및 인증서를 유지하는데 추가 비용이 발생
+  - 인터넷 연결이 끊긴 경우 재인증 시간이 소요
+    - HTTP는 비연결형으로 웹 페이지를 보는 중 인터넷 연결이 끊겼다가 다시 연결되어도 페이지를 계속 볼 수 있음
+    - HTTPS는 소켓자체에서 인증을 하기 때문에 인터넷 연결이 끊기면 소켓도 끊어져서 다시 HTTPS 인증이 필요
 
 <br>
 <hr>
+
+### 클라이언트와 서버의 통신 흐름 과정
+
+**HTTP**
+
+1. 사용자가 웹 브라우저에 URL 주소 입력
+2. DNS 서버에 웹 서버의 호스트 이름을 IP주소로 변경 요청
+3. 웹 서버와 TCP 연결 시도
+   - 3way-handshaking
+4. 클라이언트가 서버에게 데이터 요청
+5. 서버가 클라이언트에게 데이터 응답
+6. 서버 클라이언트 간 연결 종료
+   - 4way-handshaking
+7. 웹 브라우저가 웹 문서 출력
+
+**HTTPS**
+
+![image](https://user-images.githubusercontent.com/55429912/120432120-6c186600-c3b4-11eb-81db-ce88aacf245d.png)
+
+
+1. 클라이언트가 SSL로 암호화된 페이지를 요청
+2. 서버는 클라이언트에게 인증서를 전송
+   - 인증서에 포함된 내용
+     - 서버측 공개키
+     - 공개키 암호화 방법
+     - 인증서를 사용한 웹서버의 URL
+     - 인증서를 발행한 기관 이름
+3. 클라이언트는 인증서가 신용있는 cA로부터 서명된 것인지 판단
+4. 클라이언트는 CA의 공개키를 이용해 인증서를 복호화하고, 서버의 공개키를 획득
+5. 클라이언트는 서버의 공개키를 사용해 랜덤 대칭 암호화키, 데이터 등을 암호화하여 서버로 전송
+6. 서버는 자신의 개인키를 이용해 복호화하고 랜덤 대칭 암호화키, 데이터 등을 획득
+7. 서버는 랜덤 대칭 암호화키로 클라이언트 요청에 대한 응답을 암호화하여 전송
+8. 클라이언트는 랜덤 대칭 암호화키를 이용해 복호화하고 데이터를 이용
+
+## GET & POST
+
+<br>
+
+### GET:
+
+- 클라이언트에서 서버로 어떠한 리소스에서 **데이터를 요청**하기 위해 사용되는 메서드
+- GET을 통한 요청은 URL주소 끝에 파라미터로 포함되어 전송되며, 이 부분을 쿼리 스트링(query string)이라 부름
+
+```
+www.example.com/show?name1=value1&name2=value2
+```
+
+- 요청의 길이 제한이 있으며, 보안에 취약함(URL에 파라미터가 노출되기 때문에)
+- 요청 정보가 여러 개일 경우에는 '&'로 구분
+- GET방식은 캐싱을 사용할 수 있어, GET 요청과 그에 대한 응답이 브라우저에 의해 캐시된다.
+
+### POST:
+
+- 클라이언트에서 서버로 리소스를 생성하거나 업데이트하기 위해 **데이터를 변경할 때** 사용되는 메서드
+- HTTP Request Message의 Body 부분에 데이터를 담아서 서버로 보냄
+- 길이 제한이 따로 없어서 용량이 큰 데이터를 보거나, 보안이 필요할 때 사용(데이터를 암호화하지 않으면 Body의 데이터도 볼 수는 있음)
+
+### 주요 차이점: GET은 HTTP Message에 Body가 없고, POST는 HTTP Message에 Body가 존재!!
+
+<br>
+<hr>
+
+## Cookie & Session
+
+- HTTP 프로토콜은 비연결, 상태정보를 유지하지 않으므로 모든 요청 간 의존관계가 없다.
+- 즉, 현재 접속한 사용자가 이전에 접속했던 사용자와 같은 사용자인지 아닌지 알수 있는 방법이 없다.
+- 연결을 유지하지 않기 때문에 자원 낭비가 줄어드는 것은 큰 장점이지만, 통신마다 새로 연결하기 때문에 클라이언트는 매 요청마다 인증을해야하는 단점이 존재한다.
+- HTTP 프로토콜에서 상태를 유지하기 위한 기술로 Cookie와 Session이 있다.
+  
+### 쿠키(Cookie)란?
+
+
+
+
+
 
 ## ARP Spoofing
 
