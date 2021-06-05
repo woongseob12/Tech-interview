@@ -909,19 +909,3 @@ Scale-out: 여러대의 서버가 나눠서 일하도록 함
   ```
 
 ---
-
-## ARP Spoofing
-
-LAN에서 ARP를 이용하여 상대방의 데이터 패킷을 중간에서 가로채는 기법
-
-`ARP(Address Resolution Protocol): IP주소를 MAC주소로 변환해주는 프로토콜`
-
-![ARP spoofing](https://user-images.githubusercontent.com/55429912/119259472-7181ed80-bc09-11eb-981f-984831af3d44.png)
-
-ARP 통신방법:
-
-1. ARP는 기본적으로 MAC 주소를 얻기 위해 IP를 BroadCast방식으로 전송
-2. 그 중에 필요한 MAC주소를 가지고 있는 특정 장치의 Response를 이용해 MAC 주소를 얻어냄
-3. 받은 MAC 주소를 캐싱 테이블에 저장한 뒤, 이 주소를 이용하여 통신
-
-**ARP Spoofing은 Broadcast로 전송된 IP요청을 받은 후 요청자에게 잘못된 MAC주소를 알려줌. 그리고 올바른 MAC주소를 가진 타겟 장치에 또한 요청자 MAC주소가 아닌 잘못된 MAC주소를 보내줌.**
