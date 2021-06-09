@@ -526,11 +526,13 @@ ARP Table을 통해 해결
    ![image](https://user-images.githubusercontent.com/55429912/120896649-75782b80-c65d-11eb-9246-1e1082d6e940.png)
 
    - Dos(서비스 거부 공격):
+   - 
      ![image](https://user-images.githubusercontent.com/55429912/121008790-56e57200-c7ce-11eb-939b-29b30be7d78f.png)
 
      타겟 시스템의 자원을 고갈시키거나 네트워크 대역폴을 초과시켜 원래 의도된 용도로 사용하지 못하게 하는 공격
 
    - DDos(분산 서비스 거부 공격):
+   - 
      ![image](https://user-images.githubusercontent.com/55429912/121008731-47662900-c7ce-11eb-9043-f4aaa0dc9422.png)
 
      공격자가 여러 대의 컴퓨터를 감염시켜 동시에 한 타겟 시스템을 집중적으로 공격하는 기법
@@ -543,14 +545,107 @@ ARP Table을 통해 해결
 
 ## 영상처리 & 머신러닝
 
-- OpenCV
-- Dlib
+### OpenCV
+
+`Open Source Computer Vision, 다양한 영상처리에 사용할 수 있는 오픈소스 라이브러리`
+
+- 무료
+- C++, Python, java와 같은 다양한 인터페이스를 지원
+- Windows, Linux, Mac OS등 다양한 OS를 지원
+- 알고리즘 상으로 계산 효율성과 실시간 응용프로그램에 중점을 두고 설계되었기 때문에 간단하게 OpenCV에서 제공되는 API를 사용하여 코딩하여도 실시간 프로세싱이 가능한 어플리케이션을 만들 수 있기 때문에 최적화나 알고리즘을 생각하지 않고도 품질 좋은 상용프로그램을 만들 수 있음
+
+### Dlib
+
+`이미지 처리 및 기계 학습, 얼굴인식 등을 할 수 있는 C++로 개발된 고성능 라이브러리`
+
+**dlib 라이브러리에서 얼굴 검출을 위한 방법**
+
+1. HOG(Histogram of Oriented Gradients) 특성을 활용
+   - dlib.get_frontal_face_detector()
+    - 생성 객체: dlib.fhog_object_detector
+2. 학습된 CNN모델을 사용
+   - dlib.cnn_face_detection_model_v1(modelPath)
+     - 생성 객체: mmod_rectangles 
+
+얼굴검출기별 성능 비교: https://medium.com/nodeflux/performance-showdown-of-publicly-available-face-detection-model-7c725747094a
+
+**HOG 특징**
+
+`일반적으로 물체의 형태를 검출하거나, 사람의 형태를 검출하는 알고리즘`
+
+![image](https://user-images.githubusercontent.com/55429912/121386664-26940400-c985-11eb-91fc-9d5a87ccd681.png)
+
+
+1. 영상 또는 이미지 픽셀 값의 변화로 파악할 수 있는 영상 밝기 변화의 방향을 기울기 방향(gradient)값으로 표현
+2. 해당 값을 통해 객체의 형태를 검출
+   - 대상 영역을 일정 셀로 분할
+   - 각 셀마다 Edge pixel들의 방향에 대한 histogram을 구함
+   - 해당 값을 bin값으로 연결
+
+**dlib 라이브러리에서 얼굴 인식을 위한 방법**
+
+얼굴 검출기를 통해 검출된 얼굴은 해당 인물의 고개의 각도나 시선의 방향으로 인해 서로 다른 사람으로 인식 될 수 있음
+
+face landmark estimation 알고리즘
+- 기본적인 접근방식은 모든 얼굴에 존재하는 랜드마크를 찾는 것 
+
+**i·bug 300-W**
+
+300-W Data set은 i·bug(intelligent behaviour understanding group)에서
+연구 목적으로 제공되는 Data set이다.
+
+### CMake
+
+`멀티 플랫폼을 위한 빌드 지원 시스템`
+
+- **정적 및 동적 라이브러리 빌드 지원**
+- 네이티브 빌드 환경을 생성할 수 있음
+
+### 문제점 및 해결법 
+
+1. Python 지원 오류
+    ```
+    dlib의 import오류를 해결하기 위해 공식 래퍼런스를 참조하여 확인해 본 결과 dlib 라이브러리는 C++로 작성된 툴킷이기에 다른 인터페이스에서 사용하려면 컴파일을 해야함.
+    ```
+    
+    해결법:
+    ```
+    공식 레퍼런스에서 CMake를 이용하여 컴파일하는 것을 권장하여 CMake를 이용하여 dlib를 컴파일 한 후 사용
+    ```
+
+2. 얼굴 정면으로 구성된 Datasets
+    ```
+    얼굴 인식기 shape_predictor()에 Dataset인 "shape_predictor_68_face_landmarks.dat"를 사용하여 얼굴에 랜드마크 설정시 정면얼굴로 구성된 데이터 셋으로 인해 옆모습일 경우 얼굴검출을 되지만 랜드마크 설정이 되지 않음
+    ```
+
+    해결법:
+    ```
+    초기 얼굴에 랜드마크 설정된 좌표값을 저장하고 해당 좌표값의 이동 비율과 시간을 통해 옆모습을 예측
+    ```
+
+3. 디자인과 유지보수성
+    ```
+    기능뿐인 프로그램이라 디자인적 미적요소가 낮음, 웹서비스와 접목하여 유지보수성을 높이고 싶음
+    ```
+
+    해결법:
+    ```
+    웹개발지식(프론트랑 백 모두) 배우고 웹이랑 연동해서 리팩토링 할 것임..
+    ```
 
 ---
 
 ## Back-End
 
-- Spring
+### Spring
+
+POJO(Plain Old Java Object): 특정프레임워크나 기술에 종속적이지 않은 자바 객체
+
+PSA(Portable Service Abstraction): 일관된 방식으로 기술에 접근할 수 있게 해주는 설계 원칙
+
+IoC/DI(Dependency Injection): 객체 간의 의존 관계를 외부에서 다이나믹하게 설정
+
+AOP(Aspect Oriented Programming): 관심사의 분리를 통한 SW의 모듈성 향상
 
 ---
 
