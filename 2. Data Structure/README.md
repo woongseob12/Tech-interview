@@ -44,12 +44,6 @@
 
 ---
 
-## ArrayList
-
-- 크기가 가변적
-
----
-
 ## 스택(Stack)
 
 `LIFO(Last In First Out)의 선형 자료구조`
@@ -287,6 +281,9 @@ ex) 1차 해시 함수 ⇒ h1(k) = k % 17
 2. 삽입된 노드의 색깔은 `Red`로 지정
    - Black-Height의 변경을 최소화하기 위해
 3. RBT 조건에 부합하도록 노드 설정
+   
+   ![image](https://user-images.githubusercontent.com/55429912/121354751-29353000-c96a-11eb-8e6b-87234171f77c.png)
+
    - RBT 특성위배시 Recoloring을 통해 노드 색깔 조정
    - Black-Height 위배시 Rotation을 통해 height를 조정
 
