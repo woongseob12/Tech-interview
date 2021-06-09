@@ -35,12 +35,6 @@
     <td>O(N^2)</td>
     <td>O(N^2)</td>
   </tr>
-   <tr>
-    <td>셸 정렬</td>
-    <td>O(N)</td>
-    <td>O(N^1.5)</td>
-    <td>O(N^2)</td>
-  </tr>
   <tr>
     <td>버블 정렬</td>
     <td>O(N^2)</td>
@@ -71,48 +65,36 @@
 ![합병 정렬](https://user-images.githubusercontent.com/55429912/119265683-861eaf80-bc22-11eb-81c8-da9a890a187d.png)
 
 ```C++
-#define MAX_SIZE 8
-
-int res[MAX_SIZE];
-
-void merge(int* arr, int left, int mid, int right) {
-
-    int i = left, j = mid + 1, k = left;
-
-    while(i <= mid && j <= right) {
-        if(arr[i] <= arr[j]) {
-          res[k++] = arr[i++];
-        }
-        else{
-          res[k++] = arr[j++];
-        }
-    }
-    if(i > mid){  // 왼쪽 배열이 먼저 다 채워질 경우
-        for(int idx = j; idx <= right; idx++) {
-          res[k++] = data[idx];
-        }
-    }
-    else {        // 오른쪽 배열이 먼저 다 채워질 경우
-        for(int idx = i; idx <= mid; idx++) {
-          res[k++] = data[idx];
-        }
-    }
-
-    for(int idx = left; idx <= right; idx++) {
-        arr[idx] = res[idx];
-    }
+void partition(int l, int r) {
+	if (l < r) {						    // 최소 단위로 분할 할 수 있다면
+		int mid = (l + r) / 2;		        // 중간값 구하기
+		partition(l, mid);			        // 왼쪽
+		partition(mid + 1, r);		        // 오른쪽
+		merge(l, r);					    // 합치기
+	}
 }
 
-void mergeSort(int* arr, int left, int right) {
-    if(left < right) {
-      int mid = (left + right) / 2;
+void merge(int l, int r) {
+	int mid = (l + r) / 2;
+	int i = l, j = mid + 1, k = l;
+	while (i <= mid && j <= r) {		    // 왼쪽값이 다 채워지거나, 오른쪽 값이 다 채워질 때 까지
+		if (arr[i] <= arr[j]) {		        // 왼쪽 값이 더 작다면
+			res[k++] = arr[i++];		    // 왼쪽 값을 넣어주고
+		}
+		else {  						    // 오른쪽 값이 더 작다면
+			res[k++] = arr[j++];		    // 오른쪽 값을 넣어주고
+		}
+	}
 
-      mergeSort(arr, left, mid);
-      mergeSort(arr, mid + 1, right);
-      merge(arr, left, mid, right);
-    }
+	int temp = i > mid ? j : i;	    	    // 못채워 넣은 곳은 어딘지
+	while (k <= r) {
+		res[k++] = arr[temp++];	        	// 못채워 넣은 곳 채워 넣기
+	}
+
+	for (int idx = l; idx <= r; idx++) {	// 복사해주기
+		arr[idx] = res[idx];
+	}
 }
-
 ```
 
 장점: 안정 정렬(동일한 값에 대해 기존의 순서가 유지), 빠른 시간 복잡도
@@ -196,29 +178,22 @@ void heapSort(int* arr) {
 ![퀵 정렬](https://user-images.githubusercontent.com/55429912/119268416-d18a8b00-bc2d-11eb-8c34-bceab99f6b6c.png)
 
 ```C++
-void swap(int *a, int *b) {
-    int temp = *a;
-    *a = *b;
-    *b = temp;
-}
+void quickSort(int l, int r) {
+	if (l >= r) return;											// 최소 단위일 경우 처리하지 않고 반환
+	int pivot = l, start = l + 1, end = r;						// 가장 왼쪽 값을 피벗으로 설정
+	while (start <= end) {										// 시작포인터와 끝포인터가 교차하지 않을때 까지 반복
+		while (start <= r && arr[pivot] >= arr[start]) start++;	// 유효한 범위이면서 피봇보다 작거나 같은 값으로 제대로 정렬되있다면
+		while (end > l && arr[pivot] <= arr[end]) end--;		// 유효한 범위이면서 피봇보다 크거나 같은 값으로 제대로 정렬되있다면
+		if (start > end) {										// 두 포인터가 교차 되었다면
+			swap(arr[pivot], arr[end]);							// 피봇과 끝값을 교체
+		}
+		else {													// 큰 값과 작은 값이 정렬되어 있지 않은 상태라면
+			swap(arr[start], arr[end]);							// 큰 값과 작은 값이 올바른 위치로 가도록 교체
+		}
+	}
 
-void quickSort(int left, int right) {
-    if(left >= right) return;
-    int pivot = left, start = left + 1, end = right;
-
-    while(start <= end) {
-        while(arr[pivot] >= arr[start] && start <= right) start++;
-        while(arr[pivot] <= arr[end] && end > left) end--;
-        if(s > e) {
-            swap(arr[pivot], arr[end]);
-        }
-        else {
-            swap(arr[start], arr[end]);
-        }
-    }
-
-    quickSort(left, end - 1);
-    quickSort(end + 1, right);
+	quickSort(l, end - 1);										// 피봇 제외한 왼쪽
+	quickSort(end + 1, r);										// 피봇을 제외한 오른쪽
 }
 ```
 
@@ -240,32 +215,22 @@ void quickSort(int left, int right) {
 ![삽입 정렬](https://user-images.githubusercontent.com/55429912/119269333-229c7e00-bc32-11eb-927b-242e29978717.png)
 
 ```C++
-#define MAX_SIZE 5
-int arr[MAX_SIZE] = {8, 5, 6, 2, 4};
-
 void insertionSort() {
-    for(int i = 1; i < MAX_SIZE; i++) {
-        int key = arr[i], j;
-
-        for(j = i - 1; j >= 0; j--) {
-            if(key >= arr[j]) break;
-            arr[j + 1] = arr[j];
-        }
-        arr[j + 1] = key;
-    }
+	int len = sizeof(arr) / sizeof(arr[0]), i, j;
+	for (i = 1; i < len; i++) {			    // 두번째 부터 비교 시작
+		int key = arr[i];
+		for (j = i - 1; j >= 0; j--) {	    // 앞의 원소들과 비교
+			if (arr[j] <= key) break;		// 앞이 값이 더 작다면 탐색 중단(오름차순 기준)
+			arr[j + 1] = arr[j];			// 값 1칸씩 밀어주기
+		}
+		arr[j + 1] = key;					// 들어갈 공간을 찾아서 삽입
+	}
 }
 ```
 
 장점: 최선의 경우(이미 정렬되어 있는 경우) O(N), 안정 정렬
 
 단점: 최악의 경우 O(N^2)
-
-<br>
-<hr>
-
-## Shell Sort(셸 정렬)
-
-<br>
 
 <br>
 <hr>
@@ -281,19 +246,15 @@ void insertionSort() {
 ![버블 정렬](https://user-images.githubusercontent.com/55429912/119269868-d0a92780-bc34-11eb-9418-705c0fdf02bf.png)
 
 ```C++
-#define MAX_SIZE 5
-int arr[MAX_SIZE] = {7, 4, 5, 1, 3};
-
 void bubbleSort() {
-    for (int i = 0; i < MAX_SIZE - 1; i++) {
-        for (int j = 0; j < MAX_SIZE - 1 - i; j++) {
-            if (arr[j] > arr[j + 1]) {
-                int temp = arr[j];
-                arr[j] = arr[j + 1];
-                arr[j + 1] = temp;
-            }
-        }
-    }
+	int len = sizeof(arr) / sizeof(arr[0]);
+	for (int i = len - 1; i > 0; i--) {		    // 끝부터 채워 나가기
+		for (int j = 0; j < i; j++) {			// 채워진 부분을 제외하고 앞부분 진행하기
+			if (arr[j] > arr[j + 1]) {		    // 앞의 값이 더 클 경우 교체(오름차순)
+				swap(arr[j], arr[j + 1]);
+			}
+		}
+	}
 }
 ```
 
@@ -315,23 +276,19 @@ void bubbleSort() {
 ![선택 정렬](https://user-images.githubusercontent.com/55429912/119270338-2aaaec80-bc37-11eb-9c10-9b35b28737f9.png)
 
 ```C++
-#define MAX_SIZE 5
-int arr[MAX_SIZE] = {9, 6, 7, 3, 5};
-
 void selectionSort() {
-    for (int i = 0; i < MAX_SIZE - 1; i++) {
-		    int min = i;
-		    for (int j = i + 1; j < MAX_SIZE; j++) {
-			      if (arr[j] < arr[min]) {
-				        min = j;
-			      }
-		    }
-		    if (min != i) {
-			    int temp = arr[i];
-			    arr[i] = arr[min];
-			    arr[min] = temp;
-		    }
-	  }
+	int len = sizeof(arr) / sizeof(arr[0]);
+	for (int i = 0; i < len - 1; i++) {		    // 순회
+		int min = i;							// 최소값 설정
+		for (int j = i + 1; j < len; j++) {
+			if (arr[min] > arr[j]) {			// 최소값 갱신
+				min = j;
+			}
+		}
+		if (min != i) {
+			swap(arr[min], arr[i]);			    // 최소값 교체
+		}
+	}
 }
 ```
 
@@ -464,11 +421,18 @@ void bfs(int node) {
 
 **최단 경로 알고리즘**
 
-`시간 복잡도: O((V + E)logV)`
+기본 로직: 첫 정점을 기준으로 연결되어 있는 정점들을 추가해가며, 최단 거리를 갱신하는 것
 
-`V는 노드, E는 간선`
+모든 노드를 각각 비교하는 선형탐색의 경우 시간복잡도는 `O(V^2)`
 
-`각 노드마다 미방문 노드 중 출발점으로부터 현재까지 계산된 최단거리를 가지는 노드를 찾는데 O(VlogV), 각 노드마다 이웃한 노드의 최단 거리를 갱신할 때 O(ElogV)`
+힙구조로 구현시 시간 복잡도는 `O((V + E)logV)`
+
+V는 노드, E는 간선
+
+- 각 노드마다 미방문 노드중 출발점~ 현재까지 계산된 최단거리를 가지는 노드를 찾는데 `O(VlogV)`의 시간이 필요
+  - 모든 노드 O(V)에 대해 힙에서 최소값을 추출O(logV)
+- 각 노드마다 이웃한 노드의 최단거리를 갱신하는데 `O(ElogV)`의 시간이 필요
+  - 각 노드마다 모든 이웃을 확인하는 것은 모든 Edge를 확인하는 것과 같고 O(E), 매번 힙에서 최단거리를 갱신해야 하기 때문에 O(logV)
 
 **우선순위큐를 이용하여 구현**
 
@@ -532,7 +496,7 @@ void dijkstra(int start) {
 5. 계속해서 갱신이 되는 경우 음수 사이클이 존재하는 것
 
 왜 V - 1번 일까?
-`노드의 개수가 V개 일때, MST의 개수는 V - 1개임`
+`최단 경로를 구하는 알고리즘에서 특정 정점을 2번 지날 수 없음`
 
 ```C++
 // 음의 싸이클이 존재하는지 판별해주는 Bellman() 함수
@@ -566,6 +530,8 @@ bool bellman() {
 장점: 음의 가중치 간선이 있어도 사용 가능
 
 단점: 다익스트라에 비해 큰 시간복잡도(O(VE) > O((V + E)logV))
+
+출처 https://soobarkbar.tistory.com/75
 
 <br>
 <hr>
