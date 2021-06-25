@@ -499,7 +499,41 @@ TCP의 신뢰성 보장을 위해 연결해제시에도 4-way handshake를 통�
     - HTTPS는 소켓자체에서 인증을 하기 때문에 인터넷 연결이 끊기면 소켓도 끊어져서 다시 HTTPS 인증이 필요
 
 <br>
-<hr>
+
+- HTTP/0.9 - 원-라인 프로토콜
+  - 단일 라인으로 구성된 요청
+  - 가능한 메서드: GET
+  - 단순한 응답
+  - 파일 내용 자체로 구성
+- HTTP/1.0
+  - 1번에 연결에 1번의 Request & 1번의 Response
+  - 매번 새로운 연결로 성능 저하
+  - 서버 부하 비용 증가
+- HTTP/1.1
+  - Persistent Connection: 지정한 Timeout 동안 커넥션을 닫지 않는 방식
+  - Pipelining: 하나의 커넥션에서 응답을 기다리지 않고 순차적인 여러 요청을 연속적으로 보내 그 순서에 맞춰 응답을 받는 방식으로 지연 시간을 줄이는 방법
+  - Head Of Line Blocking
+  - Header 구조의 중복
+- HTTP/2
+
+  - 기존 HTTP/1.x 버전의 **성능 향상**에 초점을 맞춘 프로토콜
+  - HTTP 메시지 전송 방식의 변화
+    - 바이너리 프레이밍 계층 사용
+    - 파싱, 전송 속도 ↑, 오류 발생 가능성 ↓
+  - 요청과 응답의 다중화(Multiplexing)
+    - Head Of Line Blocking 해결
+  - Stream Prioritization
+    - 리소스간 우선 순위 설정 가능
+  - Server Push
+
+    ![image](https://user-images.githubusercontent.com/55429912/123412063-1ff3c680-d5ec-11eb-9893-9c9d5adfbe54.png)
+
+  - Header Compression
+
+    ![image](https://user-images.githubusercontent.com/55429912/123411798-d2775980-d5eb-11eb-9a53-3a0e31ccd8b3.png)
+
+    - 헤더의 크기를 줄여 페이지 로드 시간 감소
+    <hr>
 
 ### 클라이언트와 서버의 통신 흐름 과정
 
@@ -873,7 +907,9 @@ Scale-out: 여러대의 서버가 나눠서 일하도록 함
 
 1. 사용자의 PC는 DHCP 서버에서 사용자 자신의 IP주소, 가장 가까운 라우터의 IP주소, 가장 가까운 DNS서버의 IP주소를 받는다.
 2. ARP 프로토콜을 이용하여 IP주소를 기반으로 가장 가까운 라우터의 MAC주소를 알아낸다.
-  - MAC(Media Access Control) 주소: 네트워크 카드 하드웨어에 부여된 고유한 물리적 주소
+
+- MAC(Media Access Control) 주소: 네트워크 카드 하드웨어에 부여된 고유한 물리적 주소
+
 3. 2의 과정을 통해 외부와 통신할 준비를 마친 뒤, DNS Query를 DNS 서버에 송신한다. DNS 서버는 이에대한 결과로 웹 서버의 IP주소를 사용자 PC에게 돌려준다.
 4. HTTP Request를 위해 TCP 소켓을 개방하고 연결한다.(이 과정에서 3-way-handshaking 발생)
 5. 이에 대한 응답으로 웹페이지의 정보가 사용자의 PC로 들어온다.
@@ -893,15 +929,14 @@ Scale-out: 여러대의 서버가 나눠서 일하도록 함
 **CORS 설정방법**
 
 - 서버에서 특정 도메인에서의 요청을 허용
-   - API의 응답 헤더에 "Access-Control-Allow-Origin" 값을 넣어줌으로써 CORS 정책을 따르도록 할 수 있음.
-   - API에 대해 개별적으로 적용되는 사항이기 때문에, 모든 API에 일일이 대응해주어야 함
-   
-   ```javascript
-   app.use((req. res, next) => {
-      res.header("Access-Control-Allow-Origin","*");   // 모든 도메인
-      res.header("Access-Control-Allow-Origin","https://www.naver.com/");   // 특정 도메인
-   });
-   ```
+  - API의 응답 헤더에 "Access-Control-Allow-Origin" 값을 넣어줌으로써 CORS 정책을 따르도록 할 수 있음.
+  - API에 대해 개별적으로 적용되는 사항이기 때문에, 모든 API에 일일이 대응해주어야 함
+  ```javascript
+  app.use((req. res, next) => {
+     res.header("Access-Control-Allow-Origin","*");   // 모든 도메인
+     res.header("Access-Control-Allow-Origin","https://www.naver.com/");   // 특정 도메인
+  });
+  ```
 - Node.js Express 미들웨어 CORS
   - CORS라이브러리를 Express 서버에 설치해서 사용
   ```javascript
